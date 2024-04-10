@@ -2,34 +2,34 @@
 
 ## Parent
 ```ts
-import { getParent } from 'https://deno.land/x/worker_ionic/mod.ts';
+import { getParentWorker } from 'https://deno.land/x/worker_ionic/mod.ts';
 
 // load worker
-const parent = getParent(new URL('./worker.ts', import.meta.url).href)
+const worker = getParentWorker(new URL('./worker.ts', import.meta.url).href)
 
 // listen to worker events
-parent.on('ping', (data) => {
+const event = worker.on('ping', (data) => {
 	console.log(data)
 })
+// remove event listener
+worker.remove('ping', event);
+// emit to worker
+worker.emit('channel', { potatoes: 'smashed' });
 ```
 
 
 ## Child
 ```ts
-const client = getClientSocket('localhost:1994', ['session', 'token']);
-client.on('connected', () => {
-  // client is connected
-  
-  // listen to a channel
-  client.on('ping', (message) => {
-    // client emit message
-    client.emit('pong', { date: Date.now() })
-  });
-});
-client.on('error', () => {
-  // client error
-});
-client.on('disconnected', () => {
-  // client is disconnected
-});
+import { getChildWorker } from 'https://deno.land/x/worker_ionic/mod.ts';
+
+const worker = getChildWorker();
+
+// listen to parent events
+const event = worker.on('ping', (data) => {
+	console.log(data)
+})
+// remove event listener
+worker.remove('ping', event);
+// emit to parent
+worker.emit('channel', { potatoes: 'smashed' });
 ```
