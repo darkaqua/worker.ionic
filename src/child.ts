@@ -20,9 +20,12 @@ export const getChildWorker = () => {
 	const remove = (event: string, id: number) =>
 		events[event] = events[event].filter((event, index) => index === id ? undefined : event);
 	
+	const close = () => self.close();
+	
 	return {
 		on,
 		emit,
-		remove
+		remove,
+		close
 	}
 }

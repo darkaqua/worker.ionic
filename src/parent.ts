@@ -22,9 +22,12 @@ export const getParentWorker = (url: string) => {
 	const remove = (event: string, id: number) =>
 		events[event] = events[event].filter((event, index) => index === id ? undefined : event);
 	
+	const close = () => worker.terminate();
+	
 	return {
 		on,
 		emit,
-		remove
+		remove,
+		close
 	}
 }
