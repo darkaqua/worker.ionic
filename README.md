@@ -5,7 +5,11 @@
 import { getParentWorker } from 'https://deno.land/x/worker_ionic/mod.ts';
 
 // load worker
-const worker = getParentWorker(new URL('./worker.ts', import.meta.url).href)
+const worker = getParentWorker({
+  url: new URL('./worker.ts', import.meta.url).href,
+	pingTimeout: 1000,
+	pingInterval: 100
+})
 
 // listen to worker events
 const event = worker.on('ping', (data) => {

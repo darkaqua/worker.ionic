@@ -1,6 +1,16 @@
 
-export const getParentWorker = (url: string) => {
-	const events: Record<string, any> = {};
+type Props = {
+	url: string;
+	pingInterval: number;
+	pingTimeout: number;
+}
+
+export const getParentWorker = ({
+	url,
+	pingTimeout = 1_000,
+	pingInterval = 100
+																}: Props) => {
+	const events: Record<string, any[]> = {};
 	
 	const worker = new Worker(url, { type: 'module' });
 	
@@ -11,7 +21,7 @@ export const getParentWorker = (url: string) => {
 				event(message)
 	}
 	
-	const on = (event: string, callback: (event: string, message: any) => void) =>{
+	const on = (event: 'disconnected' | string, callback: (event: string, message: any) => void) =>{
 		if(!events[event]) events[event] = [];
 		return events[event].push(callback) -1;
 	}
@@ -23,6 +33,22 @@ export const getParentWorker = (url: string) => {
 		events[event] = events[event].filter((event, index) => index === id ? undefined : event);
 	
 	const close = () => worker.terminate();
+	
+	// ping child to know is alive, if not, disconnect
+	let lastTimeout;
+	let lastPingTimeout;
+	on('__internal__pong', () => {
+		lastPingTimeout = setTimeout(() => {
+			emit('__internal__ping', {});
+		}, pingInterval)
+		clearTimeout(lastTimeout);
+		lastTimeout = setTimeout(() => {
+			if(events.disconnected)
+				for (const event of events.disconnected)
+					event()
+			clearTimeout(lastPingTimeout)
+		}, pingTimeout)
+	})
 	
 	return {
 		on,

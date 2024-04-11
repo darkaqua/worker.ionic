@@ -20,12 +20,10 @@ export const getChildWorker = () => {
 	const remove = (event: string, id: number) =>
 		events[event] = events[event].filter((event, index) => index === id ? undefined : event);
 	
-	const close = () => {
-		emit('disconnected', '')
-		setTimeout(() => {
-			self.close();
-		}, 2)
-	}
+	const close = () => self.close();
+	
+	emit('__internal__pong', {});
+	on('__internal__ping', () => emit('__internal__pong', {}))
 	
 	return {
 		on,
