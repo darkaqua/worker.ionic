@@ -22,7 +22,9 @@ export const getChildWorker = () => {
 	
 	const close = () => {
 		emit('disconnected', '')
-		self.close();
+		setTimeout(() => {
+			self.close();
+		}, 2)
 	}
 	
 	return {
