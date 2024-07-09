@@ -1,4 +1,4 @@
-import { WorkerChild } from "./types";
+import { WorkerChild } from "./types.ts";
 
 export const getChildWorker = (): WorkerChild => {
   const events: Record<string, any> = {};
