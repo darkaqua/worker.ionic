@@ -1,8 +1,7 @@
+import { getChildWorker } from "../mod.ts";
 
-import { getChildWorker } from '../mod.ts'
-
-const worker = getChildWorker()
+const worker = getChildWorker();
 
 setTimeout(() => {
-	worker.close();
-}, 2_000)
+  worker.close();
+}, 2_000);

@@ -1,3 +1,2 @@
-
-export * from './child.ts'
-export * from './parent.ts'
+export * from "./child.ts";
+export * from "./parent.ts";
