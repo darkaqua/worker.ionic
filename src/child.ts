@@ -31,7 +31,11 @@ export const getChildWorker = (): WorkerChild => {
   const close = () => self.close();
 
   emit("__internal__pong", {});
-  on("__internal__ping", () => emit("__internal__pong", {}));
+  on("__internal__ping", ({ mainModule }) => {
+    if(mainModule)
+      Deno.mainModule = mainModule;
+    emit("__internal__pong", {})
+  });
 
   return {
     on,
