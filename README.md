@@ -3,7 +3,7 @@
 ## Parent
 
 ```ts
-import { getParentWorker } from "https://deno.land/x/worker_ionic/mod.ts";
+import { getParentWorker } from "@da/worker";
 
 // load worker
 const worker = getParentWorker({
@@ -25,7 +25,7 @@ worker.emit("channel", { potatoes: "smashed" });
 ## Child
 
 ```ts
-import { getChildWorker } from "https://deno.land/x/worker_ionic/mod.ts";
+import { getChildWorker } from "@da/worker";
 
 const worker = getChildWorker();
 
