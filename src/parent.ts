@@ -39,9 +39,13 @@ export const getParentWorker = ({
   // ping child to know is alive, if not, disconnect
   let lastTimeout;
   let lastPingTimeout;
+  let firstTime = true;
   on("__internal__pong", () => {
     lastPingTimeout = setTimeout(() => {
-      emit("__internal__ping", {});
+      emit("__internal__ping", firstTime ? {
+        mainModule: Deno.mainModule
+      } : {});
+      firstTime = false;
     }, pingInterval);
     clearTimeout(lastTimeout);
     lastTimeout = setTimeout(() => {
